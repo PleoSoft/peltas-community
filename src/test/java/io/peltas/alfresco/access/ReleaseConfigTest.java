@@ -44,16 +44,16 @@ public class ReleaseConfigTest {
 	@Test
 	public void evaluatorConfig_OK() {
 		MultiValueMap<String, String> occurencies = pipeline.getEvaluatorConfigurationOccurencies();
-		List<String> evaluatorCreate = occurencies.get("/alfresco-access/transaction/action=NODE-UPDATED");
+		List<String> evaluatorCreate = occurencies.get("/alfresco-workspace/transaction/action=NODE-UPDATED");
 		assertEquals(2, evaluatorCreate.size());
 
-		List<String> evaluatorDelete = occurencies.get("/alfresco-access/transaction/action=NODE-DELETED");
+		List<String> evaluatorDelete = occurencies.get("/alfresco-workspace/transaction/action=NODE-DELETED");
 		assertEquals(1, evaluatorDelete.size());
 
-		List<String> evaluatorContent = occurencies.get("/alfresco-access/transaction/type=cm:content");
+		List<String> evaluatorContent = occurencies.get("/alfresco-workspace/transaction/type=cm:content");
 		assertEquals(1, evaluatorContent.size());
 
-		List<String> evaluatorFolder = occurencies.get("/alfresco-access/transaction/type=cm:folder");
+		List<String> evaluatorFolder = occurencies.get("/alfresco-workspace/transaction/type=cm:folder");
 		assertEquals(1, evaluatorFolder.size());
 	}
 }

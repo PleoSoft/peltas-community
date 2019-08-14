@@ -254,24 +254,24 @@ public class AlfrescoWorkspaceRestReader extends AbstractPeltasRestReader<Peltas
 
 		Builder<String, Object> builder = ImmutableMap.<String, Object>builder();
 		if (liveProperties != null) {
-			builder.put("/alfresco-access/transaction/properties/add", liveProperties);
+			builder.put("/alfresco-workspace/transaction/properties/add", liveProperties);
 		}
 
 		if (aspects != null) {
-			builder.put("/alfresco-access/transaction/aspects/add", aspects);
+			builder.put("/alfresco-workspace/transaction/aspects/add", aspects);
 		}
 
 		if (livedataMetadata.getType() != null) {
-			builder.put("/alfresco-access/transaction/type", livedataMetadata.getType());
+			builder.put("/alfresco-workspace/transaction/type", livedataMetadata.getType());
 		}
 
 		if (actionStatus != null) {
-			builder.put("/alfresco-access/transaction/action", "NODE-" + actionStatus);
+			builder.put("/alfresco-workspace/transaction/action", "NODE-" + actionStatus);
 		}
 
 		if (livedataMetadata.getNodeRef() != null) {
-			builder.put("/alfresco-access/transaction/path", livedataMetadata.getNodeRef());
-			builder.put("/alfresco-access/transaction/nodeRef", livedataMetadata.getNodeRef());
+			builder.put("/alfresco-workspace/transaction/path", livedataMetadata.getNodeRef());
+			builder.put("/alfresco-workspace/transaction/nodeRef", livedataMetadata.getNodeRef());
 		}
 
 		auditEntry.setValues(builder.build());

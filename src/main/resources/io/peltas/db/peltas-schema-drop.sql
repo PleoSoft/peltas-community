@@ -1,0 +1,9 @@
+DROP TABLE peltas_action_metadata_fact;
+DROP TABLE peltas_action_aspect_fact;
+DROP TABLE peltas_action_fact;
+DROP TABLE peltas_node_dim;
+DROP TABLE peltas_action_dim;
+DROP TABLE peltas_datetime_dim;
+DROP TABLE peltas_qname_dim;
+DROP TABLE peltas_user_dim;
+DROP TABLE peltas_model_dim;

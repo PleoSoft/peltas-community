@@ -1,4 +1,5 @@
 
+
 Peltas is an application that gives you BI insights on your existing Alfresco (audit applications or workspace repository data) data by extracting raw data from it and storing them in target system, like a relational database. 
 It is built on open source technologies such as Spring Boot, Spring Batch and Spring Integrations and can easily be extended for custom requirements or configured with simple configuration files. As a ready to run application, 
 Peltas provides immediate results, while enabling teams or companies to use any BI tool they are familiar with. It is simple and easy to setup and does not require a lot of specific tooling knowledge. 
@@ -78,9 +79,15 @@ More information can be seen in the conifguration file at src/main/resources/io/
 		peltas.ssl.hostVerify=false
 
 # Run with Docker
-	- create docker image locally: mvn package -P docker
+	- create docker image locally: mvn clean package dockerfile:build -Pdocker
 	- or pull from docker hub: docker pull docker pull pleosoft/peltas-community
-	- start: docker run -p 8080:8080 pleosoft/peltas-community
+	- since you need the Alfresco platform the easiest way is to checkout the acs-deplyoment and at the end of the file add
+	  (take care of the allignment and do not use tabs)
+		
+        peltas:
+            image: pleosoft/peltas-community:2.0.0-RELEASE
+            mem_limit: 128m
+		
 
 # BI tools
 Any kind of BI tools with Database connectors can be used. For demos Power BI is quite convenient however it does not support PostgreSQL out of the box and you need a connector such as [https://github.com/npgsql/Npgsql/releases](https://github.com/npgsql/Npgsql/releases "https://github.com/npgsql/npgsql/releases") or follow this simple turtorial [https://community.powerbi.com/t5/Community-Blog/Configuring-Power-BI-Connectivity-to-PostgreSQL-Database/ba-p/12567](https://community.powerbi.com/t5/Community-Blog/Configuring-Power-BI-Connectivity-to-PostgreSQL-Database/ba-p/12567)
@@ -88,6 +95,16 @@ Any kind of BI tools with Database connectors can be used. For demos Power BI is
 # Change the DB schema
 	- Peltas comes with a predefined DB schema and executions scripts (src/main/resources/io/peltas)
 	- you can change them and adapt to your specific schema requirements
+
+# Custom Namespaces
+A custom Alfresco namespace is not automatically updated in Peltas Community and therfore you have to do an insert of your custom in the "peltas_model_dim" table:
+
+* INSERT INTO peltas_model_dim(shortname, longname, modified) VALUES ('your_shortname','{your_localname}',NOW());
+
+cm:content as example:
+* INSERT INTO peltas_model_dim(shortname, longname, modified) VALUES ('cm','{http://www.alfresco.org/model/content/1.0}',NOW());
+	
+Peltas will not stop working if the namespace does not exist, but it will not go further on any nodes and it will continue retrying untill you setup your custom namespace.
 	
 # Peltas Executions
 	- TODO	

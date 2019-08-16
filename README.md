@@ -86,7 +86,7 @@ More information can be seen in the conifguration file at src/main/resources/io/
 since you need the Alfresco platform the easiest way is to checkout [https://github.com/Alfresco/acs-community-deployment](https://github.com/Alfresco/acs-community-deployment) and at the end of the docker-compose/docker-compose.yml file add
 		
         peltas:
-            image: pleosoft/peltas-community:2.0.0-RELEASE
+            image: pleosoft/peltas-community:latest
             mem_limit: 128m
 
   (take care of the allignment and do not use tabs)

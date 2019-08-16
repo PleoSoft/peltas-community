@@ -37,7 +37,7 @@ public class AlfrescoWorkspaceConfiguration extends AbstractAlfrescoPeltasConfig
 	PeltasTimestampRepository auditRepository;
 
 	@Bean
-	RestTemplate restTemplate() {
+	public RestTemplate restTemplate() {
 		RestTemplate restTemplate = new RestTemplate();
 
 		BasicAuth basicAuth = alfrescoAuditProperties().getAuth().getBasic();

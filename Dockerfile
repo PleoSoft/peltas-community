@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-debian:11
+FROM adoptopenjdk/openjdk11:alpine-jre
 
 ARG JAR_FILE
 ADD target/${JAR_FILE} peltas-community.jar

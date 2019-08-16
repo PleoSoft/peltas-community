@@ -1,5 +1,6 @@
 
 
+
 Peltas is an application that gives you BI insights on your existing Alfresco (audit applications or workspace repository data) data by extracting raw data from it and storing them in target system, like a relational database. 
 It is built on open source technologies such as Spring Boot, Spring Batch and Spring Integrations and can easily be extended for custom requirements or configured with simple configuration files. As a ready to run application, 
 Peltas provides immediate results, while enabling teams or companies to use any BI tool they are familiar with. It is simple and easy to setup and does not require a lot of specific tooling knowledge. 
@@ -81,13 +82,14 @@ More information can be seen in the conifguration file at src/main/resources/io/
 # Run with Docker
 	- create docker image locally: mvn clean package dockerfile:build -Pdocker
 	- or pull from docker hub: docker pull docker pull pleosoft/peltas-community
-	- since you need the Alfresco platform the easiest way is to checkout the acs-deplyoment and at the end of the file add
-	  (take care of the allignment and do not use tabs)
+
+since you need the Alfresco platform the easiest way is to checkout [https://github.com/Alfresco/acs-community-deployment](https://github.com/Alfresco/acs-community-deployment) and at the end of the docker-compose/docker-compose.yml file add
 		
         peltas:
             image: pleosoft/peltas-community:2.0.0-RELEASE
             mem_limit: 128m
-		
+
+  (take care of the allignment and do not use tabs)
 
 # BI tools
 Any kind of BI tools with Database connectors can be used. For demos Power BI is quite convenient however it does not support PostgreSQL out of the box and you need a connector such as [https://github.com/npgsql/Npgsql/releases](https://github.com/npgsql/Npgsql/releases "https://github.com/npgsql/npgsql/releases") or follow this simple turtorial [https://community.powerbi.com/t5/Community-Blog/Configuring-Power-BI-Connectivity-to-PostgreSQL-Database/ba-p/12567](https://community.powerbi.com/t5/Community-Blog/Configuring-Power-BI-Connectivity-to-PostgreSQL-Database/ba-p/12567)

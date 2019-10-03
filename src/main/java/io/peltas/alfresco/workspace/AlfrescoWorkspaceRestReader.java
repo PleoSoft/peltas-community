@@ -30,8 +30,8 @@ import com.google.common.collect.ImmutableMap.Builder;
 import io.peltas.core.alfresco.PeltasEntry;
 import io.peltas.core.alfresco.config.PeltasProperties;
 import io.peltas.core.batch.AbstractPeltasRestReader;
-import io.peltas.core.repository.PeltasTimestamp;
-import io.peltas.core.repository.PeltasTimestampRepository;
+import io.peltas.core.repository.TxDataRepository;
+import io.peltas.core.repository.database.PeltasTimestamp;
 
 public class AlfrescoWorkspaceRestReader extends AbstractPeltasRestReader<PeltasEntry, AlfrescoWorkspaceNodes>
 		implements InitializingBean {
@@ -40,7 +40,7 @@ public class AlfrescoWorkspaceRestReader extends AbstractPeltasRestReader<Peltas
 
 	public static final String AUDIT_ID_SEPARATOR = "___";
 
-	private final PeltasTimestampRepository auditRepository;
+	private final TxDataRepository auditRepository;
 	private final PeltasProperties auditProperties;
 	private final AtomicLong txId = new AtomicLong(0);
 	private Long skipToNodeId = null;
@@ -54,7 +54,7 @@ public class AlfrescoWorkspaceRestReader extends AbstractPeltasRestReader<Peltas
 	private Long currentMaxTxId;
 
 	public AlfrescoWorkspaceRestReader(final RestTemplate restTemplate, final PeltasProperties properties,
-			PeltasTimestampRepository auditRepository) {
+			TxDataRepository auditRepository) {
 		super(properties.getApplication(), restTemplate);
 		this.auditProperties = properties;
 		this.auditRepository = auditRepository;
@@ -62,7 +62,7 @@ public class AlfrescoWorkspaceRestReader extends AbstractPeltasRestReader<Peltas
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		auditTimeStamp = auditRepository.findTopByApplicationNameOrderByAccessDesc(getApplicationName());
+		auditTimeStamp = auditRepository.readTx(getApplicationName());
 		if (auditTimeStamp != null) {
 			String ref = auditTimeStamp.getRef();
 			String[] split = ref.split(AUDIT_ID_SEPARATOR);

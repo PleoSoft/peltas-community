@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -18,11 +17,8 @@ import io.peltas.core.alfresco.config.AbstractAlfrescoPeltasConfiguration;
 import io.peltas.core.alfresco.config.PeltasProperties;
 import io.peltas.core.alfresco.config.PeltasProperties.Authentication.BasicAuth;
 import io.peltas.core.batch.AbstractPeltasRestReader;
-import io.peltas.core.batch.PeltasDataHolder;
-import io.peltas.core.batch.PeltasItemProcessor;
-import io.peltas.core.batch.PeltasProcessor;
 import io.peltas.core.config.EnablePeltasInMemory;
-import io.peltas.core.repository.PeltasTimestampRepository;
+import io.peltas.core.repository.TxDataRepository;
 
 @Configuration
 @EnablePeltasInMemory
@@ -31,10 +27,7 @@ public class AlfrescoWorkspaceConfiguration extends AbstractAlfrescoPeltasConfig
 	private static final Logger LOGGER = LoggerFactory.getLogger(AlfrescoWorkspaceConfiguration.class);
 
 	@Autowired
-	JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	PeltasTimestampRepository auditRepository;
+	private TxDataRepository dataRepository;
 
 	@Bean
 	public RestTemplate restTemplate() {
@@ -52,7 +45,7 @@ public class AlfrescoWorkspaceConfiguration extends AbstractAlfrescoPeltasConfig
 		RestTemplate restTemplate = restTemplate();
 
 		PeltasProperties properties = alfrescoAuditProperties();
-		return new AlfrescoWorkspaceRestReader(restTemplate, properties, auditRepository);
+		return new AlfrescoWorkspaceRestReader(restTemplate, properties, dataRepository);
 	}
 
 	private MappingJackson2HttpMessageConverter mappingJacksonHttpMessageConverter() {
@@ -66,10 +59,5 @@ public class AlfrescoWorkspaceConfiguration extends AbstractAlfrescoPeltasConfig
 		mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		return mapper;
-	}
-
-	@Override
-	public PeltasItemProcessor<PeltasEntry, PeltasDataHolder> processor() {
-		return new PeltasProcessor(alfrescoAuditApplication(), template, auditRepository);
 	}
 }

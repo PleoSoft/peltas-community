@@ -16,10 +16,8 @@
 
 package io.peltas.alfresco.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.Resource;
 
 import io.peltas.core.alfresco.config.PeltasHandlerConfigurationProperties;
 import io.peltas.core.alfresco.config.expression.ContainsExpressionEvaluator;
@@ -29,9 +27,6 @@ import io.peltas.core.alfresco.config.expression.EvaluatorExpressionRegistry;
 @EnableConfigurationProperties
 public class PeltastTestConfig {
 
-	@Value("classpath:io/peltas/executions/**")
-	private Resource[] resources;
-	
 	@Bean
 	public EvaluatorExpressionRegistry evaluatorExpressionRegistry() {
 		EqualsExpressionEvaluator equalsExpressionEvaluator = new EqualsExpressionEvaluator();
@@ -45,6 +40,6 @@ public class PeltastTestConfig {
 
 	@Bean
 	public PeltasHandlerConfigurationProperties alfrescoHandlerProperties() {
-		return new PeltasHandlerConfigurationProperties(evaluatorExpressionRegistry(), resources);
+		return new PeltasHandlerConfigurationProperties(evaluatorExpressionRegistry());
 	}
 }

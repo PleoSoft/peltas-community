@@ -305,7 +305,6 @@ public class AlfrescoWorkspaceRestReader extends AbstractPeltasRestReader<Peltas
 			return true;
 		}
 
-		Long nodeId = livedataNode.getId();
 		if (skipToTxId != null && skipToTxId > livedataNode.getTxnId()) {
 			return true;
 		}

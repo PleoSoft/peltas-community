@@ -93,6 +93,13 @@ since you need the Alfresco platform the easiest way is to checkout [https://git
 
 # BI tools
 Any kind of BI tools with Database connectors can be used. For demos Power BI is quite convenient however it does not support PostgreSQL out of the box and you need a connector such as [https://github.com/npgsql/Npgsql/releases](https://github.com/npgsql/Npgsql/releases "https://github.com/npgsql/npgsql/releases") or follow this simple turtorial [https://community.powerbi.com/t5/Community-Blog/Configuring-Power-BI-Connectivity-to-PostgreSQL-Database/ba-p/12567](https://community.powerbi.com/t5/Community-Blog/Configuring-Power-BI-Connectivity-to-PostgreSQL-Database/ba-p/12567)
+
+# Database or Inmemory
+By default Peltas uses a database and the spring boot db configuration (peltas.writer=database). However, you can chose to use an inmemory state where northing is persisted, all you need to do is set in your applicaiton.properties #peltas.writer=inemmory
+and you have to disable the dataseource autconfiguration  spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+It is also possible to extend those implementations and store the data where you want, like in SOLR/Elastic, Mongo or anykind of storage you need.
+How to configure the beans for different requirements check in io.peltas.alfresco.workspace.AlfrescoWorkspaceConfiguration
 	
 # Change the DB schema
 	- Peltas comes with a predefined DB schema and executions scripts (src/main/resources/io/peltas)

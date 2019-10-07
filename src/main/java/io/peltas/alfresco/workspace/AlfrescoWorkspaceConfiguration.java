@@ -21,6 +21,7 @@ import javax.sql.DataSource;
 
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -34,19 +35,21 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.messaging.core.GenericMessagingTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import io.peltas.core.alfresco.integration.PeltasIntegrationWriter;
 import io.peltas.core.alfresco.workspace.DefaultAlfrescoPeltasConfiguration;
 import io.peltas.core.batch.PeltasDataHolder;
-import io.peltas.core.batch.PeltasItemWriter;
+import io.peltas.core.batch.PeltasExecutionItemWriter;
 import io.peltas.core.config.EnablePeltasInMemory;
 import io.peltas.core.repository.TxDataRepository;
 import io.peltas.core.repository.database.JpaTxDataWriter;
 import io.peltas.core.repository.database.PeltasDatasourceInitializer;
 import io.peltas.core.repository.database.PeltasDatasourceProperties;
-import io.peltas.core.repository.database.PeltasJdbcBatchWriter;
+import io.peltas.core.repository.database.PeltasJdbcWriter;
 import io.peltas.core.repository.database.PeltasTimestamp;
 import io.peltas.core.repository.database.PeltasTimestampRepository;
 
@@ -86,29 +89,53 @@ public class AlfrescoWorkspaceConfiguration {
 
 		@Bean
 		public ItemWriter<PeltasDataHolder> peltasBatchWriter() {
-			return new PeltasItemWriter<Object, Object>() {
+			return new PeltasExecutionItemWriter<Object, Object>();
+		}
+	}
+
+	@Configuration
+	@ConditionalOnProperty(name = "peltas.writer", havingValue = "integration")
+	public class IntegrationWriterConfiguration {
+
+		@Bean
+		public GenericMessagingTemplate messagingTemplate(BeanFactory beanFactory) {
+			GenericMessagingTemplate template = new GenericMessagingTemplate();
+			template.setBeanFactory(beanFactory);
+			return template;
+		}
+
+		@Bean
+		public TxDataRepository txDataWriter() {
+			return new TxDataRepository() {
 
 				@Override
-				public Object createItemInputParameters(PeltasDataHolder item) {
+				public PeltasTimestamp writeTx(PeltasTimestamp ts) {
+					return ts;
+				}
+
+				@Override
+				public PeltasTimestamp readTx(String applicationName) {
 					return null;
 				}
-
-				@Override
-				public void itemExecution(String executionKey, Object parameters) {
-				}
-
-				@Override
-				public Object createCollectionItemInputParameters(Object itemParams, String collectionKey,
-						Object collectionValue) {
-					return null;
-				}
-
-				@Override
-				public void collectionExecution(String executionKey, Object params) {
-				}
-
 			};
 		}
+
+		@Bean
+		public ResourcelessTransactionManager transactionManager() {
+			return new ResourcelessTransactionManager();
+		}
+
+		@Bean
+		public ItemWriter<PeltasDataHolder> peltasBatchWriter(BeanFactory beanFactory) {
+			return new PeltasIntegrationWriter<Object, Object>(messagingTemplate(beanFactory));
+		}
+
+		@Bean
+		public IntegrationServiceSample integrationServiceSample() {
+			return new IntegrationServiceSample();
+		}
+
+
 	}
 
 	@Configuration
@@ -118,9 +145,9 @@ public class AlfrescoWorkspaceConfiguration {
 	public class WriterConfiguration {
 
 		@Bean
-		public PeltasJdbcBatchWriter peltasBatchWriter(JdbcTemplate jdbcTemplate,
+		public PeltasJdbcWriter peltasBatchWriter(JdbcTemplate jdbcTemplate,
 				@Value("classpath:io/peltas/db/executions/*.sql") Resource[] resources) {
-			return new PeltasJdbcBatchWriter(new NamedParameterJdbcTemplate(jdbcTemplate), resources);
+			return new PeltasJdbcWriter(new NamedParameterJdbcTemplate(jdbcTemplate), resources);
 		}
 
 		@Bean

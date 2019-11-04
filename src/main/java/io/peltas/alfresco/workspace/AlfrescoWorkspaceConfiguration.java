@@ -57,7 +57,7 @@ import io.peltas.core.repository.database.PeltasTimestampRepository;
 @EnableScheduling
 @EnableIntegration
 @EnableTransactionManagement
-@PropertySource(ignoreResourceNotFound = true, value = { "classpath:io/peltas/peltas.properties" })
+@PropertySource(ignoreResourceNotFound = true, value = { "classpath:io/peltas/peltas-community.properties" })
 @Import(DefaultAlfrescoPeltasConfiguration.class)
 @EnablePeltasInMemory
 public class AlfrescoWorkspaceConfiguration {

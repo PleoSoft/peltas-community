@@ -3,7 +3,7 @@ package io.peltas.alfresco.workspace;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.Message;
 
-import io.peltas.core.alfresco.integration.PeltasIntegrationWriter.PeltasIntegrationMessage;
+import io.peltas.core.integration.PeltasIntegrationWriter.PeltasIntegrationMessage;
 
 public class IntegrationServiceSample {
 

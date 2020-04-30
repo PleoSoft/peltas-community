@@ -16,18 +16,17 @@
 
 package io.peltas.alfresco.workspace;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -36,31 +35,31 @@ import org.springframework.integration.config.EnableIntegration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.messaging.core.GenericMessagingTemplate;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import io.peltas.core.alfresco.integration.PeltasIntegrationWriter;
-import io.peltas.core.alfresco.workspace.DefaultAlfrescoPeltasConfiguration;
+import io.peltas.boot.PeltasDatasourceProperties;
 import io.peltas.core.batch.PeltasDataHolder;
 import io.peltas.core.batch.PeltasExecutionItemWriter;
-import io.peltas.core.config.EnablePeltasInMemory;
+import io.peltas.core.integration.PeltasIntegrationWriter;
 import io.peltas.core.repository.TxDataRepository;
-import io.peltas.core.repository.database.JpaTxDataWriter;
-import io.peltas.core.repository.database.PeltasDatasourceInitializer;
-import io.peltas.core.repository.database.PeltasDatasourceProperties;
-import io.peltas.core.repository.database.PeltasJdbcWriter;
-import io.peltas.core.repository.database.PeltasTimestamp;
-import io.peltas.core.repository.database.PeltasTimestampRepository;
+import io.peltas.core.repository.jdbc.PeltasDatasourceInitializer;
+import io.peltas.core.repository.jdbc.PeltasJdbcWriter;
+import io.peltas.core.repository.jpa.JpaTxDataWriter;
+import io.peltas.core.repository.jpa.PeltasTimestamp;
+import io.peltas.core.repository.jpa.PeltasTimestampRepository;
 
 @Configuration
 @EnableScheduling
 @EnableIntegration
 @EnableTransactionManagement
 @PropertySource(ignoreResourceNotFound = true, value = { "classpath:io/peltas/peltas-community.properties" })
-@Import(DefaultAlfrescoPeltasConfiguration.class)
-@EnablePeltasInMemory
 public class AlfrescoWorkspaceConfiguration {
+	
+	@Bean
+	public PeltasScheduler peltasScheduler(JobLauncher jobLauncher, Job job) {
+		return new PeltasScheduler(jobLauncher, job);
+	}
 
 	@Configuration
 	@ConditionalOnProperty(name = "peltas.writer", havingValue = "inmemory")
@@ -83,11 +82,6 @@ public class AlfrescoWorkspaceConfiguration {
 		}
 
 		@Bean
-		public ResourcelessTransactionManager transactionManager() {
-			return new ResourcelessTransactionManager();
-		}
-
-		@Bean
 		public ItemWriter<PeltasDataHolder> peltasBatchWriter() {
 			return new PeltasExecutionItemWriter<Object, Object>();
 		}
@@ -96,13 +90,6 @@ public class AlfrescoWorkspaceConfiguration {
 	@Configuration
 	@ConditionalOnProperty(name = "peltas.writer", havingValue = "integration")
 	public class IntegrationWriterConfiguration {
-
-		@Bean
-		public GenericMessagingTemplate messagingTemplate(BeanFactory beanFactory) {
-			GenericMessagingTemplate template = new GenericMessagingTemplate();
-			template.setBeanFactory(beanFactory);
-			return template;
-		}
 
 		@Bean
 		public TxDataRepository txDataWriter() {
@@ -121,20 +108,15 @@ public class AlfrescoWorkspaceConfiguration {
 		}
 
 		@Bean
-		public ResourcelessTransactionManager transactionManager() {
-			return new ResourcelessTransactionManager();
-		}
-
-		@Bean
-		public ItemWriter<PeltasDataHolder> peltasBatchWriter(BeanFactory beanFactory) {
-			return new PeltasIntegrationWriter<Object, Object>(messagingTemplate(beanFactory));
+		public ItemWriter<PeltasDataHolder> peltasBatchWriter(BeanFactory beanFactory,
+				GenericMessagingTemplate messagingTemplate) {
+			return new PeltasIntegrationWriter<Object, Object>(messagingTemplate);
 		}
 
 		@Bean
 		public IntegrationServiceSample integrationServiceSample() {
 			return new IntegrationServiceSample();
 		}
-
 
 	}
 
@@ -159,11 +141,6 @@ public class AlfrescoWorkspaceConfiguration {
 		public PeltasDatasourceInitializer peltasDatasourceInitializer(DataSource dataSource,
 				ResourceLoader resourceLoader) {
 			return new PeltasDatasourceInitializer(dataSource, resourceLoader, peltasDatasourceProperties());
-		}
-
-		@Bean
-		public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
-			return new JpaTransactionManager(emf);
 		}
 
 		@Bean

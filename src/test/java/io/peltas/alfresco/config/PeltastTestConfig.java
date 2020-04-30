@@ -19,10 +19,10 @@ package io.peltas.alfresco.config;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-import io.peltas.core.alfresco.config.PeltasHandlerConfigurationProperties;
-import io.peltas.core.alfresco.config.expression.ContainsExpressionEvaluator;
-import io.peltas.core.alfresco.config.expression.EqualsExpressionEvaluator;
-import io.peltas.core.alfresco.config.expression.EvaluatorExpressionRegistry;
+import io.peltas.boot.PeltasHandlerConfigurationProperties;
+import io.peltas.core.expression.ContainsExpressionEvaluator;
+import io.peltas.core.expression.EqualsExpressionEvaluator;
+import io.peltas.core.expression.EvaluatorExpressionRegistry;
 
 @EnableConfigurationProperties
 public class PeltastTestConfig {

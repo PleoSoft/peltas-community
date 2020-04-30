@@ -30,7 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.MultiValueMap;
 
 import io.peltas.alfresco.config.PeltastTestConfig;
-import io.peltas.core.alfresco.config.PeltasHandlerConfigurationProperties;
+import io.peltas.boot.PeltasHandlerConfigurationProperties;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

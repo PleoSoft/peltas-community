@@ -106,6 +106,13 @@ public class AlfrescoWorkspaceConfiguration {
 				}
 			};
 		}
+		
+		@Bean
+		public GenericMessagingTemplate messagingTemplate(BeanFactory beanFactory) {
+			GenericMessagingTemplate template = new GenericMessagingTemplate();
+			template.setBeanFactory(beanFactory);
+			return template;
+		}
 
 		@Bean
 		public ItemWriter<PeltasDataHolder> peltasBatchWriter(BeanFactory beanFactory,

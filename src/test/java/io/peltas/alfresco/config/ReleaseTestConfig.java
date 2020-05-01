@@ -25,7 +25,7 @@ import io.peltas.core.expression.EqualsExpressionEvaluator;
 import io.peltas.core.expression.EvaluatorExpressionRegistry;
 
 @EnableConfigurationProperties
-public class PeltastTestConfig {
+public class ReleaseTestConfig {
 
 	@Bean
 	public EvaluatorExpressionRegistry evaluatorExpressionRegistry() {

@@ -29,13 +29,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.MultiValueMap;
 
-import io.peltas.alfresco.config.PeltastTestConfig;
+import io.peltas.alfresco.config.ReleaseTestConfig;
 import io.peltas.boot.PeltasHandlerConfigurationProperties;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:io/peltas/peltas.properties")
-@ContextConfiguration(classes = PeltastTestConfig.class)
+@TestPropertySource(locations = "classpath:io/peltas/peltas-community.properties")
+@ContextConfiguration(classes = ReleaseTestConfig.class)
 public class ReleaseConfigTest {
 
 	@Autowired

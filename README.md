@@ -17,15 +17,15 @@ Peltas reads Alfresco nodes data via the Alfresco existing REST APIs and maps th
 
 No additional amps/jars or Alfresco customization is needed to run Peltas since it is an independant Spring Boot application.
 
-Since Peltas was firstly built for Alfresco Audit logs data, the core engine is highly inspired by the data format of an audit log entry and therfore even the live workspace nodes are converted into a similar audit format while being processed.
+Since Peltas was firstly built for Alfresco Audit logs data, the core engine is highly inspired by the data format of an audit log entry and therefor even the live workspace nodes are converted into a similar audit format while being processed.
 
 Peltas also knows where to restart from, what was the last node processed is kept in the DB table named: peltas_timestamp.
-It is important to understand that such data processing cannot be "parallelized" and therfore clustering is not os any help in speeding up the data processing. Peltas has a scheduler and it will run in a fixed delay way that can be configured by setting the property to the value that fits your setup
+It is important to understand that such data processing cannot be "parallelized" and therefor clustering is not of any help in speeding up the data processing. Peltas has a scheduler and it will run in a fixed delay way that can be configured by setting the property to the value that fits your setup
 - peltas.scheduler.fixedDelay=5000
 	
 Workspace nodes data
 --
-Nodes data are read from the Alfresco SOLR API. Just like the Alfresco search services do the indexing part, exactly the same services are used by Peltas and therfore no data is missed and everything is transactionally written the to DB storage.
+Nodes data are read from the Alfresco SOLR API. Just like the Alfresco search services do the indexing part, exactly the same services are used by Peltas and therefor no data is missed and everything is transactionally written the to DB storage.
 
 Alfresco Audit data
 --
@@ -33,7 +33,7 @@ Alfresco Audit data
 	
 Cherry picking Alfresco nodes
 --
-Peltas implements an evaluator engine, where each Alfresco node can be tested in order to be processed by Peltas or not taken into consideration, this is done by configuring an evaluator. An evaluator could be configured with node content type, action type or aspects/metadata and all of thoe could be combined
+Peltas implements an evaluator engine, where each Alfresco node can be tested in order to be processed by Peltas or not taken into consideration, this is done by configuring an evaluator. An evaluator could be configured with node content type, action type or aspects/metadata and all of those could be combined
 
 	peltas.handler.documentupdated.evaluator=/alfresco-workspace/transaction/action=NODE-UPDATED|/alfresco-workspace/transaction/type=cm:content 
 
@@ -41,7 +41,7 @@ The next step is to configure the node metadata mapping and do the data conversi
 
 	peltas.handler.documentupdated.mapper.property.action.data=/alfresco-workspace/transaction/action
 
-More information can be seen in the conifguration file at src/main/resources/io/peltas/peltas.properties and any of those could be overriden in Spring application.properties if required.
+More information can be seen in the configuration file at src/main/resources/io/peltas/peltas.properties and any of those could be overriden in Spring application.properties if required.
 
 # Run Locally
 	- git checkout	
@@ -99,7 +99,7 @@ Any kind of BI tools with Database connectors can be used. For demos Power BI is
 	- you can change them and adapt to your specific schema requirements
 
 # Custom Namespaces
-A custom Alfresco namespace is not automatically updated in Peltas Community and therfore you have to do an insert of your custom in the "peltas_model_dim" table:
+A custom Alfresco namespace is not automatically updated in Peltas Community and therefor you have to do an insert of your custom in the "peltas_model_dim" table:
 
 * INSERT INTO peltas_model_dim(shortname, longname, modified) VALUES ('your_shortname','{your_localname}',NOW());
 

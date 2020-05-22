@@ -50,7 +50,17 @@
 		<dependency>
 			<groupId>io.peltas</groupId>
 			<artifactId>peltas-core</artifactId>
-			<version>3.0.1-RELEASE</version>
+			<version>3.0.2-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
 		</dependency>
 
 		<dependency>
